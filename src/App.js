@@ -1,5 +1,6 @@
 import { Routes } from "react-router";
 import ProductsGrid from "./components/ProductsGrid/ProductsGrid";
+import ProductDetails from "./components/Details/Details";
 
 function App() {
   return (
@@ -7,7 +8,8 @@ function App() {
       {/* <Routes>
 
       </Routes> */}
-      <ProductsGrid />
+      {/* <ProductsGrid /> */}
+      <ProductDetails />
     </div>
   );
 }
