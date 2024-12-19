@@ -36,7 +36,7 @@ const ProductsGrid = () => {
     const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 20 });
     const [totalRows, setTotalRows] = useState(0);
 
-    const productListCurrentPage = useRef(products); //all current page product list for filtering
+    const productListCurrentPage = useRef(products); //all current page product list for filtering and searching
     const categoryListCurrentPage = useRef([]);
 
     const navigate = useNavigate();
@@ -108,7 +108,7 @@ const ProductsGrid = () => {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                minHeight: '80vh' 
+                // minHeight: '80vh' 
             }}>
                 {
                     isLoading ? (
