@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { DataGrid } from '@mui/x-data-grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { useNavigate } from "react-router-dom";
 import product_dummy_image from "../../assets/dummy image.jpg";
+import SearchAndFilterProduct from "../SearchAndFilterProduct/SearchAndFilterProduct";
   
 const columns = [
     { field: 'image', 
@@ -35,6 +36,9 @@ const ProductsGrid = () => {
     const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 20 });
     const [totalRows, setTotalRows] = useState(0);
 
+    const productListCurrentPage = useRef(products); //all current page product list for filtering
+    const categoryListCurrentPage = useRef([]);
+
     const navigate = useNavigate();
 
     const fetchProducts = async (page) => {
@@ -56,6 +60,10 @@ const ProductsGrid = () => {
             }));
 
             setProducts(formattedProducts);
+            productListCurrentPage.current = formattedProducts; //all current page product list for filtering
+
+            createCategoryList(formattedProducts);
+
             setTotalRows(data.totalResults); 
         } catch (error) {
             console.error("Error fetching products:", error);
@@ -64,6 +72,10 @@ const ProductsGrid = () => {
         }
     };
 
+    const createCategoryList = (productList) => {
+        const categoryList = productList.map(product => product.category.toUpperCase());
+        categoryListCurrentPage.current = [...new Set(categoryList)];
+    };
     
     const handlePaginationChange = (newPaginationModel) => {
         setPaginationModel(newPaginationModel);
@@ -86,36 +98,43 @@ const ProductsGrid = () => {
 
 
     return (
-        <Box sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            minHeight: '80vh' 
-        }}>
-            {
-                isLoading ? (
-                    <Box sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                    }}>
-                        <CircularProgress />
-                        <p>Loading...</p>
-                    </Box>
-                ) : (
-                    <DataGrid 
-                        rows={products} 
-                        columns={columns} 
-                        rowCount={totalRows}
-                        pagination
-                        paginationMode="server"
-                        paginationModel={paginationModel}
-                        onPaginationModelChange={handlePaginationChange}
-                        getRowHeight={() => 'auto'}
-                        onRowClick={handleRowClick}
-                    />
-                )
-            }    
-        </Box>
+        <>
+            <SearchAndFilterProduct 
+                productList={productListCurrentPage.current} 
+                setProducts={setProducts}
+                categoryList={categoryListCurrentPage.current}
+            />
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                minHeight: '80vh' 
+            }}>
+                {
+                    isLoading ? (
+                        <Box sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                        }}>
+                            <CircularProgress />
+                            <p>Loading...</p>
+                        </Box>
+                    ) : (
+                        <DataGrid 
+                            rows={products} 
+                            columns={columns} 
+                            rowCount={totalRows}
+                            pagination
+                            paginationMode="server"
+                            paginationModel={paginationModel}
+                            onPaginationModelChange={handlePaginationChange}
+                            getRowHeight={() => 'auto'}
+                            onRowClick={handleRowClick}
+                        />
+                    )
+                }    
+            </Box>
+        </>
     );
 };
 
