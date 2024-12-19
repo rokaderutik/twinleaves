@@ -1,6 +1,5 @@
-import Products from "./Pages/Products";
-import './App.css';
 import { Routes } from "react-router";
+import ProductsGrid from "./components/ProductsGrid/ProductsGrid";
 
 function App() {
   return (
@@ -8,8 +7,7 @@ function App() {
       {/* <Routes>
 
       </Routes> */}
-      Twinleaves/Pallet
-      <Products />
+      <ProductsGrid />
     </div>
   );
 }
