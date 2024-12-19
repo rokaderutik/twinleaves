@@ -2,11 +2,18 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import product_dummy_image from "../../assets/dummy image.jpg";
 import { useState } from "react";
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import { useLocation, useNavigate } from "react-router-dom";
 
 
 const ProductDetails = () => {
 
     const [productCount, setProductCount] = useState(1);
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { productData } = location.state;
+
+    // console.log(productData);
 
     const handleAddToBasket = (e) => {
         // add to basket
@@ -16,15 +23,31 @@ const ProductDetails = () => {
         // save product for latter
     };
 
+    const handleGoBack = () => {
+        navigate(-1);
+    };
+
 
     return (
         <Stack sx={{ padding: '20px' }}>
+            <Button
+                variant="outlined"
+                onClick={handleGoBack}
+                sx={{
+                    alignSelf: "flex-end",
+                    marginBottom: "16px",
+                    marginRight: "16px"
+                }}
+            >
+                Back
+            </Button>
+
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
                 flexWrap: 'wrap',
-                gap: '16px'
+                gap: '24px'
             }}>
                 <img 
                     src={product_dummy_image} 
@@ -40,10 +63,13 @@ const ProductDetails = () => {
                 />
                 <Stack spacing={1}>
                     <Typography sx={{ fontSize: "20px", fontWeight: 600 }}>
-                        {"name"}
+                        {productData.name}
                     </Typography>
                     <Typography sx={{ fontSize: "16px", fontWeight: 500 }}>
-                        Price: Rs {"price"}
+                        {productData.category}
+                    </Typography>
+                    <Typography sx={{ fontSize: "16px", fontWeight: 500 }}>
+                        Price: Rs {productData.price}
                     </Typography>
                     <Typography sx={{ fontSize: "16px", fontWeight: 200 }}>
                         (Inclusive of all taxes)
@@ -89,7 +115,7 @@ const ProductDetails = () => {
             </Box>
             <Stack spacing={1} sx={{ padding: '20px' }}>
                 <Typography sx={{ fontSize: "20px", fontWeight: 600 }}>
-                    {"name"}
+                    {productData.name}
                 </Typography>
                 <hr style={{width: '100%'}}/>
                 <Typography sx={{ fontSize: "16px", fontWeight: 500 }}>

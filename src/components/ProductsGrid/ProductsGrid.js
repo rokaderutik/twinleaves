@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { DataGrid } from '@mui/x-data-grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import { useNavigate } from "react-router-dom";
 import product_dummy_image from "../../assets/dummy image.jpg";
   
 const columns = [
@@ -34,7 +35,8 @@ const ProductsGrid = () => {
     const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 20 });
     const [totalRows, setTotalRows] = useState(0);
 
-console.log(paginationModel)
+    const navigate = useNavigate();
+
     const fetchProducts = async (page) => {
         try {
             setIsLoading(true);
@@ -68,6 +70,16 @@ console.log(paginationModel)
         fetchProducts(newPaginationModel.page);
     };
 
+    const handleRowClick = (params) => {
+        const productId = params.row.id;
+        const productData = params.row;
+
+        navigate(
+            `/details/${productId}`,
+            { state: { productData: productData }}
+        );
+    };
+
     useEffect(() => {
         fetchProducts(paginationModel.page);
     }, [paginationModel]); 
@@ -99,6 +111,7 @@ console.log(paginationModel)
                         paginationModel={paginationModel}
                         onPaginationModelChange={handlePaginationChange}
                         getRowHeight={() => 'auto'}
+                        onRowClick={handleRowClick}
                     />
                 )
             }    
